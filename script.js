@@ -142,6 +142,42 @@ function handleDrop(e) {
 // ======================
 // 🔹 Place tile correctly in answer grid
 // ======================
+dropZone.addEventListener("drop", (e) => {
+    e.preventDefault();
+    
+    let draggedPos = e.dataTransfer.getData("text/plain");
+    let draggedTile = tiles.find(t => t.dataset.correctPosition === draggedPos);
+    
+    if (draggedTile) {
+        let dropRect = dropZone.getBoundingClientRect();
+        let tileRect = draggedTile.getBoundingClientRect();
+        
+        let offsetX = Math.abs(dropRect.left - tileRect.left);
+        let offsetY = Math.abs(dropRect.top - tileRect.top);
+        
+        // Allow **only** a 2px error margin
+        let errorMargin = 2; 
+        
+        if (draggedPos === dropZone.dataset.targetPosition && offsetX <= errorMargin && offsetY <= errorMargin) {
+            dropZone.appendChild(draggedTile);
+            draggedTile.style.position = "static"; 
+            draggedTile.classList.add("blinking");
+            setTimeout(() => draggedTile.classList.remove("blinking"), 1000);
+            
+            correctTiles++;
+            
+            // Show "WINNER" when all tiles are correctly placed
+            if (correctTiles === totalTiles) {
+                winnerText.style.display = "block";
+                winnerText.style.animation = "winner-blink 0.5s 5 alternate";
+            }
+        } else {
+            // If wrong placement, return tile to its original position
+            tileGrid.appendChild(draggedTile);
+        }
+    }
+});
+
 function placeTileCorrectly(tile, dropZone) {
     dropZone.appendChild(tile);
     tile.style.position = "static";
