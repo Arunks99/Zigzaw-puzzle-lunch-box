@@ -1,87 +1,72 @@
-body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  background-color: #f0f0f0;
-  font-family: Arial, sans-serif;
-  padding: 20px;
-}
+const gridSize = 4;
+const tileSize = 70;
+let correctTiles = 0;
+const totalTiles = gridSize * gridSize;
 
-#puzzle-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-}
+const grid = document.getElementById("grid");
+const tileGrid = document.getElementById("tile-grid");
+const winnerText = document.getElementById("winner");
+const warning = document.getElementById("warning");
+let tiles = [];
 
-#tile-grid,
-#grid {
-  display: grid;
-  grid-template-columns: repeat(4, 70px);
-  grid-template-rows: repeat(4, 70px);
-  gap: 2px;
-  background: #ddd;
-  padding: 5px;
-  border: 2px solid #333;
-  margin-bottom: 10px;
-}
-
-.tile {
-  width: 70px;
-  height: 70px;
-  background-image: url("https://i.postimg.cc/bvhnVRfP/S74-lunch-box.png");
-  background-size: 280px 280px;
-  cursor: grab;
-}
-
-.blinking {
-  animation: blink 0.3s 3 alternate;
-}
-
-@keyframes blink {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0.3;
+let positions = [];
+for (let row = 0; row < gridSize; row++) {
+  for (let col = 0; col < gridSize; col++) {
+    positions.push({ row, col });
   }
 }
+positions.sort(() => Math.random() - 0.5);
 
-#winner {
-  display: none;
-  font-size: 24px;
-  font-weight: bold;
-  color: green;
-  margin-top: 20px;
-  animation: winner-blink 0.5s 5 alternate;
+for (let i = 0; i < positions.length; i++) {
+  let { row, col } = positions[i];
+  let tile = document.createElement("div");
+  tile.classList.add("tile");
+  tile.style.backgroundPosition = `-${col * tileSize}px -${row * tileSize}px`;
+  tile.dataset.correctPosition = `${row}-${col}`;
+  tile.draggable = true;
+
+  tile.addEventListener("dragstart", (e) => {
+    e.dataTransfer.setData("text/plain", tile.dataset.correctPosition);
+  });
+
+  tiles.push(tile);
 }
 
-@keyframes winner-blink {
-  0% {
-    opacity: 1;
+// Shuffle tiles before appending them to the tile grid
+for (let tile of tiles.sort(() => Math.random() - 0.5)) {
+  tileGrid.appendChild(tile);
+}
+
+for (let row = 0; row < gridSize; row++) {
+  for (let col = 0; col < gridSize; col++) {
+    let dropZone = document.createElement("div");
+    dropZone.style.width = `${tileSize}px`;
+    dropZone.style.height = `${tileSize}px`;
+    dropZone.dataset.targetPosition = `${row}-${col}`;
+    dropZone.addEventListener("dragover", (e) => e.preventDefault());
+
+    dropZone.addEventListener("drop", (e) => {
+      let draggedPos = e.dataTransfer.getData("text/plain");
+      let draggedTile = tiles.find(
+        (t) => t.dataset.correctPosition === draggedPos
+      );
+
+      if (draggedTile && draggedPos === dropZone.dataset.targetPosition) {
+        dropZone.appendChild(draggedTile);
+        draggedTile.style.position = "static";
+        draggedTile.classList.add("blinking");
+        setTimeout(() => draggedTile.classList.remove("blinking"), 1000);
+        correctTiles++;
+        if (correctTiles === totalTiles) {
+          winnerText.style.display = "block";
+          winnerText.style.animation = "winner-blink 0.5s 5 alternate";
+        }
+      } else {
+        warning.style.display = "block";
+        setTimeout(() => (warning.style.display = "none"), 2000);
+      }
+    });
+
+    grid.appendChild(dropZone);
   }
-  100% {
-    opacity: 0.3;
-  }
-}
-
-#instructions {
-  margin-top: 20px;
-  font-size: 16px;
-  text-align: center;
-  max-width: 500px;
-}
-
-.warning {
-  color: red;
-  font-weight: bold;
-  display: none;
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-#grid div {
-  border: 1px solid grey;
 }
