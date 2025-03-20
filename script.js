@@ -84,8 +84,8 @@ function handleTouchStart(e) {
 
     // Calculate offset between touch point and tile position
     let rect = tile.getBoundingClientRect();
-    tile.dataset.offsetX = 2;
-    tile.dataset.offsetY = 2;
+    tile.dataset.offsetX = .5;
+    tile.dataset.offsetY = .5;
 
     tile.style.zIndex = "1000"; // Bring above other elements
 }
