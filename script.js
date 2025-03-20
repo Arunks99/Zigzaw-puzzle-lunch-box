@@ -9,6 +9,7 @@ const tileGrid = document.getElementById("tile-grid");
 const winnerText = document.getElementById("winner");
 let tiles = [];
 
+// Generate tile positions
 let positions = [];
 for (let row = 0; row < gridSize; row++) {
     for (let col = 0; col < gridSize; col++) {
@@ -17,6 +18,7 @@ for (let row = 0; row < gridSize; row++) {
 }
 positions.sort(() => Math.random() - 0.5);
 
+// Create tiles
 for (let i = 0; i < positions.length; i++) {
     let { row, col } = positions[i];
     let tile = document.createElement("div");
@@ -96,6 +98,7 @@ for (let tile of tiles.sort(() => Math.random() - 0.5)) {
     tileGrid.appendChild(tile);
 }
 
+// Create the answer grid
 for (let row = 0; row < gridSize; row++) {
     for (let col = 0; col < gridSize; col++) {
         let dropZone = document.createElement("div");
