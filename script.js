@@ -22,6 +22,7 @@ for (let i = 0; i < positions.length; i++) {
     tile.classList.add("tile");
     tile.style.backgroundPosition = `-${col * tileSize}px -${row * tileSize}px`;
     tile.dataset.correctPosition = `${row}-${col}`;
+    tile.dataset.originalPosition = `${i}`;
     tile.draggable = true;
 
     // Mouse Events
@@ -33,24 +34,31 @@ for (let i = 0; i < positions.length; i++) {
     tile.addEventListener("touchstart", (e) => {
         e.preventDefault();
         tile.classList.add("dragging");
+        let touch = e.touches[0];
+        tile.dataset.startX = touch.clientX;
+        tile.dataset.startY = touch.clientY;
     });
 
     tile.addEventListener("touchmove", (e) => {
         e.preventDefault();
         let touch = e.touches[0];
-        tile.style.position = "absolute";
-        tile.style.left = `${touch.clientX - tileSize / 2}px`;
-        tile.style.top = `${touch.clientY - tileSize / 2}px`;
+        let offsetX = touch.clientX - tile.dataset.startX;
+        let offsetY = touch.clientY - tile.dataset.startY;
+        tile.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
     });
 
     tile.addEventListener("touchend", (e) => {
         tile.classList.remove("dragging");
-        let dropZone = document.elementFromPoint(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+        let touch = e.changedTouches[0];
+        let dropZone = document.elementFromPoint(touch.clientX, touch.clientY);
+        let originalPos = tile.dataset.originalPosition;
+
         if (dropZone && dropZone.dataset.targetPosition) {
             let draggedPos = tile.dataset.correctPosition;
             if (draggedPos === dropZone.dataset.targetPosition) {
                 dropZone.appendChild(tile);
                 tile.style.position = "static";
+                tile.style.transform = "none";
                 tile.classList.add("blinking");
                 setTimeout(() => tile.classList.remove("blinking"), 1000);
                 correctTiles++;
@@ -59,10 +67,10 @@ for (let i = 0; i < positions.length; i++) {
                     winnerText.style.animation = "winner-blink 0.5s 5 alternate";
                 }
             } else {
-                let warning = document.getElementById("warning");
-                warning.style.display = "block";
-                setTimeout(() => warning.style.display = "none", 2000);
+                snapBack(tile, originalPos);
             }
+        } else {
+            snapBack(tile, originalPos);
         }
     });
 
@@ -90,6 +98,7 @@ for (let row = 0; row < gridSize; row++) {
             if (draggedTile && draggedPos === dropZone.dataset.targetPosition) {
                 dropZone.appendChild(draggedTile);
                 draggedTile.style.position = "static";
+                draggedTile.style.transform = "none";
                 draggedTile.classList.add("blinking");
                 setTimeout(() => draggedTile.classList.remove("blinking"), 1000);
                 correctTiles++;
@@ -109,3 +118,12 @@ for (let row = 0; row < gridSize; row++) {
 }
 
 document.body.insertAdjacentHTML("beforeend", "<p id='warning' style='color: red; display: none; text-align: center;'>Warning: The images will not sit in the grid if the tiles do not match!</p>");
+
+// Function to snap tile back to original position
+function snapBack(tile, originalPos) {
+    tile.style.transition = "transform 0.3s ease";
+    tile.style.transform = "translate(0, 0)";
+    setTimeout(() => {
+        tile.style.transition = "none";
+    }, 300);
+}
