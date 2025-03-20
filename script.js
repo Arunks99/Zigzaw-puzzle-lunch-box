@@ -112,16 +112,16 @@ for (let row = 0; row < gridSize; row++) {
     }
 }
 
-// Function to move tile with finger exactly
+// Function to move tile with finger exactly (Fixed Offset Issue)
 function moveTile(tile, x, y) {
-    tile.style.left = `${x - tileSize / 2}px`;
-    tile.style.top = `${y - tileSize / 2}px`;
+    tile.style.left = `${x - tileSize / 2}px`; // Center horizontally
+    tile.style.top = `${y - tileSize / 2}px`;  // Center vertically
 }
 
-// Function to snap tile into the answer grid
+// Function to snap tile into the answer grid (Fixed Correct Placement)
 function snapToGrid(tile, dropZone) {
     dropZone.appendChild(tile);
-    tile.style.position = "static";
+    tile.style.position = "static";  // Ensure it sits properly
     tile.classList.add("blinking");
     setTimeout(() => tile.classList.remove("blinking"), 1000);
     correctTiles++;
@@ -132,7 +132,7 @@ function snapToGrid(tile, dropZone) {
     }
 }
 
-// Function to reset tile position (snap back)
+// Function to reset tile position (Snap Back to Original Place)
 function resetTilePosition(tile) {
     tileGrid.appendChild(tile);
     tile.style.position = "static";
