@@ -25,24 +25,25 @@ for (let i = 0; i < positions.length; i++) {
     tile.classList.add("tile");
     tile.style.backgroundPosition = `-${col * tileSize}px -${row * tileSize}px`;
     tile.dataset.correctPosition = `${row}-${col}`;
-    tile.dataset.originalPosition = i;
     tile.draggable = true;
 
     // Store original position for snapping back
-    tile.dataset.originalLeft = tile.offsetLeft;
-    tile.dataset.originalTop = tile.offsetTop;
+    tile.dataset.originalIndex = i;
 
-    // Mouse Drag Events
     tile.addEventListener("dragstart", (e) => {
         e.dataTransfer.setData("text/plain", tile.dataset.correctPosition);
+        tile.classList.add("dragging");
     });
 
-    // Touch Events for Mobile
+    tile.addEventListener("dragend", () => {
+        tile.classList.remove("dragging");
+    });
+
+    // Mobile Touch Events
     tile.addEventListener("touchstart", (e) => {
         e.preventDefault();
         let touch = e.touches[0];
 
-        // Capture initial position relative to touch
         let rect = tile.getBoundingClientRect();
         tile.dataset.offsetX = touch.clientX - rect.left;
         tile.dataset.offsetY = touch.clientY - rect.top;
@@ -54,14 +55,13 @@ for (let i = 0; i < positions.length; i++) {
         e.preventDefault();
         let touch = e.touches[0];
 
-        // Move tile exactly with the finger
         tile.style.position = "absolute";
         tile.style.left = `${touch.clientX - tile.dataset.offsetX}px`;
         tile.style.top = `${touch.clientY - tile.dataset.offsetY}px`;
     });
 
     tile.addEventListener("touchend", (e) => {
-        tile.style.zIndex = "1"; // Reset z-index
+        tile.style.zIndex = "1";
         let touch = e.changedTouches[0];
         let dropZone = document.elementFromPoint(touch.clientX, touch.clientY);
 
@@ -74,7 +74,6 @@ for (let i = 0; i < positions.length; i++) {
                 tile.style.position = "static";
                 tile.style.left = "0px";
                 tile.style.top = "0px";
-                tile.style.transform = "none";
                 tile.classList.add("blinking");
                 setTimeout(() => tile.classList.remove("blinking"), 1000);
                 correctTiles++;
@@ -93,7 +92,7 @@ for (let i = 0; i < positions.length; i++) {
     tiles.push(tile);
 }
 
-// Shuffle tiles before appending them to the tile grid
+// Shuffle tiles before adding them to tile grid
 for (let tile of tiles.sort(() => Math.random() - 0.5)) {
     tileGrid.appendChild(tile);
 }
@@ -115,7 +114,6 @@ for (let row = 0; row < gridSize; row++) {
             if (draggedTile && draggedPos === dropZone.dataset.targetPosition) {
                 dropZone.appendChild(draggedTile);
                 draggedTile.style.position = "static";
-                draggedTile.style.transform = "none";
                 draggedTile.classList.add("blinking");
                 setTimeout(() => draggedTile.classList.remove("blinking"), 1000);
                 correctTiles++;
@@ -134,12 +132,13 @@ for (let row = 0; row < gridSize; row++) {
 
 document.body.insertAdjacentHTML("beforeend", "<p id='warning' style='color: red; display: none; text-align: center;'>Warning: The images will not sit in the grid if the tiles do not match!</p>");
 
-// Function to snap tile back to original position
+// Function to snap tile back to original position in the question grid
 function snapBack(tile) {
-    tile.style.transition = "left 0.3s ease, top 0.3s ease";
-    tile.style.left = `${tile.dataset.originalLeft}px`;
-    tile.style.top = `${tile.dataset.originalTop}px`;
-    setTimeout(() => {
-        tile.style.transition = "none";
-    }, 300);
+    let originalIndex = parseInt(tile.dataset.originalIndex);
+    let originalContainer = tileGrid.children[originalIndex];
+
+    if (originalContainer) {
+        originalContainer.appendChild(tile);
+        tile.style.position = "static";
+    }
 }
