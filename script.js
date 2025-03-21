@@ -132,4 +132,21 @@ function moveTile(tile, x, y) {
 }
 
 // Function to snap tile into the answer grid
-function snapToGrid(tile, dropZone)
+function snapToGrid(tile, dropZone) {
+    dropZone.appendChild(tile);
+    tile.style.position = "static";
+    tile.classList.add("blinking");
+    setTimeout(() => tile.classList.remove("blinking"), 1000);
+    correctTiles++;
+
+    if (correctTiles === totalTiles) {
+        winnerText.style.display = "block";
+        winnerText.style.animation = "winner-blink 0.5s 5 alternate";
+    }
+}
+
+// Function to reset tile position (snap back)
+function resetTilePosition(tile) {
+    tileGrid.appendChild(tile);
+    tile.style.position = "static";
+}
