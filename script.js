@@ -30,7 +30,12 @@ for (let i = 0; i < positions.length; i++) {
     tile.dataset.originalRow = row;
     tile.dataset.originalCol = col;
 
-    // Make tile draggable (for desktop)
+    // Position tile in question grid
+    tile.style.position = "absolute";
+    tile.style.left = `${Math.random() * 200}px`;
+    tile.style.top = `${Math.random() * 200}px`;
+
+    // Make tile draggable
     tile.draggable = true;
 
     // Drag event (Mouse)
@@ -55,7 +60,6 @@ for (let i = 0; i < positions.length; i++) {
         tile.dataset.offsetY = offsetY;
 
         tile.classList.add("dragging");
-        tile.style.position = "absolute";
         tile.style.zIndex = "1000";
 
         moveTile(tile, touch.clientX, touch.clientY);
@@ -85,12 +89,8 @@ for (let i = 0; i < positions.length; i++) {
         resetTilePosition(tile);
     });
 
-    tiles.push(tile);
-}
-
-// Randomize tiles before adding them to tile grid
-for (let tile of tiles.sort(() => Math.random() - 0.5)) {
     tileGrid.appendChild(tile);
+    tiles.push(tile);
 }
 
 // Create the answer grid
@@ -144,5 +144,5 @@ function snapToGrid(tile, dropZone) {
 // Function to reset tile position (snap back)
 function resetTilePosition(tile) {
     tileGrid.appendChild(tile);
-    tile.style.position = "static";
+    tile.style.position = "absolute";
 }
