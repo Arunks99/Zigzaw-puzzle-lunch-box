@@ -43,13 +43,8 @@ for (let i = 0; i < positions.length; i++) {
 
     // Touch event (Mobile)
     tile.addEventListener("touchstart", (e) => {
-        e.preventDefault();
-        let touch = e.touches[0];
-        tile.classList.add("dragging");
-        tile.style.position = "absolute";
-        tile.style.zIndex = "1000";
-        moveTile(tile, touch.clientX, touch.clientY);
-    });
+    e.preventDefault();
+    let touch = e.touches[0];
 
     tile.addEventListener("touchmove", (e) => {
         e.preventDefault();
