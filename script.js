@@ -29,27 +29,38 @@ for (let i = 0; i < positions.length; i++) {
     // Store original position for snapping back
     tile.dataset.originalRow = row;
     tile.dataset.originalCol = col;
-    
+
     // Make tile draggable (for desktop)
     tile.draggable = true;
-    
+
     // Drag event (Mouse)
     tile.addEventListener("dragstart", (e) => {
         e.dataTransfer.setData("text/plain", tile.dataset.correctPosition);
-        setTimeout(() => tile.classList.add("hidden"), 0); // Hide while dragging
+        setTimeout(() => tile.classList.add("hidden"), 0);
     });
 
-    tile.addEventListener("dragend", () => tile.classList.remove("hidden")); // Show after dragging
+    tile.addEventListener("dragend", () => tile.classList.remove("hidden"));
 
-    // Touch event (Mobile)
+    // Touch event (Mobile) - FIXED OFFSET
     tile.addEventListener("touchstart", (e) => {
-    e.preventDefault();
-    let touch = e.touches[0];
+        e.preventDefault();
+        let touch = e.touches[0];
+
+        // Get tile's current position and calculate offset
+        let rect = tile.getBoundingClientRect();
+        let offsetX = touch.clientX - rect.left;
+        let offsetY = touch.clientY - rect.top;
+
+        tile.dataset.offsetX = offsetX;
+        tile.dataset.offsetY = offsetY;
+
         tile.classList.add("dragging");
         tile.style.position = "absolute";
-        tile.style.zIndex = "1000";
+        tile.style.zIndex = "1000"; // Bring tile to front
+
         moveTile(tile, touch.clientX, touch.clientY);
     });
+
     tile.addEventListener("touchmove", (e) => {
         e.preventDefault();
         let touch = e.touches[0];
@@ -111,28 +122,14 @@ for (let row = 0; row < gridSize; row++) {
     }
 }
 
-// Function to move tile with finger exactly (Fixed Offset Issue)
+// Function to move tile with finger correctly
 function moveTile(tile, x, y) {
-    tile.style.left = `${x - tileSize /10}px`; // Center horizontally
-    tile.style.top = `${y - tileSize /10}px`;  // Center vertically
+    let offsetX = parseFloat(tile.dataset.offsetX) || 0;
+    let offsetY = parseFloat(tile.dataset.offsetY) || 0;
+
+    tile.style.left = `${x - offsetX}px`;
+    tile.style.top = `${y - offsetY}px`;
 }
 
-// Function to snap tile into the answer grid (Fixed Correct Placement)
-function snapToGrid(tile, dropZone) {
-    dropZone.appendChild(tile);
-    tile.style.position = "static";  // Ensure it sits properly
-    tile.classList.add("blinking");
-    setTimeout(() => tile.classList.remove("blinking"), 1000);
-    correctTiles++;
-
-    if (correctTiles === totalTiles) {
-        winnerText.style.display = "block";
-        winnerText.style.animation = "winner-blink 0.5s 5 alternate";
-    }
-}
-
-// Function to reset tile position (Snap Back to Original Place)
-function resetTilePosition(tile) {
-    tileGrid.appendChild(tile);
-    tile.style.position = "static";
-}
+// Function to snap tile into the answer grid
+function snapToGrid(tile, dropZone)
