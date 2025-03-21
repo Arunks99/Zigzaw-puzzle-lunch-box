@@ -1,27 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>COCONUT PUZZLE</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COCONUT PUZZLE</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header>
     <h1>COCONUT PUZZLE</h1>
     <p class="instructions">Drag and drop the tiles into the correct position to complete the puzzle.</p>
-    <p class="warning">Warning: The images will not fit into the grid if the tiles do not match.</p>
-  </header>
-  <div class="info">
-    <span>Time: <span id="timer">0:00</span></span>
-    <span>Moves: <span id="move-counter">0</span></span>
-  </div>
-  <div id="question-grid" class="grid"></div>
-  <div id="solution-grid" class="grid"></div>
-  <button id="shuffle-btn">Shuffle</button>
-  <div id="congratulations" class="hidden">
-    <h2>Congratulations! You completed the puzzle!</h2>
-  </div>
-  <script src="script.js"></script>
+    <p id="warning"><b>Warning:</b> The images will not sit in the grid if the tiles do not match!</p>
+
+    <div id="tile-grid"></div>
+    <div id="grid"></div>
+
+    <p id="winner">🎉 You solved the puzzle! 🎉</p>
+
+    <script src="script.js"></script>
 </body>
 </html>
