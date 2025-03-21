@@ -134,8 +134,6 @@ function moveTile(tile, x, y) {
 function snapToGrid(tile, dropZone) {
     dropZone.appendChild(tile);
     tile.style.position = "static";
-    tile.classList.add("blinking");
-    setTimeout(() => tile.classList.remove("blinking"), 1000);
     correctTiles++;
 
     if (correctTiles === totalTiles) {
