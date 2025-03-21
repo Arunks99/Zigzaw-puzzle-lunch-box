@@ -1,58 +1,53 @@
 body {
-  font-family: Arial, sans-serif;
-  text-align: center;
-  background-color: #f9f9f9;
-  margin: 0;
-  padding: 0;
-}
-
-header {
-  margin: 20px 0;
+    font-family: Arial, sans-serif;
+    text-align: center;
 }
 
 h1 {
-  font-size: 24px;
+    font-size: 24px;
 }
 
 .instructions {
-  font-size: 16px;
+    font-size: 16px;
+    margin-bottom: 10px;
 }
 
-.warning {
-  color: red;
-  font-weight: bold;
+#warning {
+    font-size: 14px;
+    color: red;
+    font-weight: bold;
 }
 
-.info {
-  margin: 15px;
-  font-size: 18px;
+#tile-grid, #grid {
+    display: grid;
+    grid-template-columns: repeat(5, 50px);
+    grid-template-rows: repeat(5, 50px);
+    gap: 4px;
+    margin: 20px auto;
+    justify-content: center;
+    position: relative;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(5, 50px);
-  grid-gap: 5px;
-  margin: 20px auto;
-  width: 275px; /* Grid size: 5 tiles + 4 gaps */
-  border: 2px solid #ccc;
+.tile, .drop-zone {
+    width: 50px;
+    height: 50px;
+    border: 2px solid rgba(128, 128, 128, 0.6);
+    background-image: url('https://i.postimg.cc/bvhnVRfP/S74-lunch-box.png');
+    background-size: 250px 250px;
 }
 
 .tile {
-  width: 50px;
-  height: 50px;
-  background-size: 100% 100%;
-  border: 1px solid rgba(128, 128, 128, 0.6); /* 60% grey */
-  cursor: pointer;
-  transition: transform 0.2s ease;
+    cursor: grab;
+    touch-action: none;
 }
 
-.hidden {
-  display: none;
+.dragging {
+    opacity: 0.7;
 }
 
-button {
-  margin: 20px auto;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
+#winner {
+    display: none;
+    font-size: 20px;
+    font-weight: bold;
+    color: green;
 }
