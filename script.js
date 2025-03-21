@@ -114,8 +114,8 @@ for (let row = 0; row < gridSize; row++) {
 
 // Function to move tile with finger exactly (Fixed Offset Issue)
 function moveTile(tile, x, y) {
-    tile.style.left = `${x - tileSize /1}px`; // Center horizontally
-    tile.style.top = `${y - tileSize /1}px`;  // Center vertically
+    tile.style.left = `${x - tileSize /10}px`; // Center horizontally
+    tile.style.top = `${y - tileSize /10}px`;  // Center vertically
 }
 
 // Function to snap tile into the answer grid (Fixed Correct Placement)
