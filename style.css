@@ -1,42 +1,58 @@
 body {
-    font-family: Arial, sans-serif;
-    text-align: center;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background-color: #f9f9f9;
+  margin: 0;
+  padding: 0;
 }
 
-#tile-grid, #grid {
-    display: grid;
-    grid-template-columns: repeat(4, 70px);
-    grid-template-rows: repeat(4, 70px);
-    gap: 5px;
-    margin: 20px auto;
-    justify-content: center;
+header {
+  margin: 20px 0;
 }
 
-.tile, .drop-zone {
-    width: 70px;
-    height: 70px;
-    border: 1px solid grey;
-    background-image: url('https://i.postimg.cc/bvhnVRfP/S74-lunch-box.png');
-    background-size: 280px 280px;
+h1 {
+  font-size: 24px;
+}
+
+.instructions {
+  font-size: 16px;
+}
+
+.warning {
+  color: red;
+  font-weight: bold;
+}
+
+.info {
+  margin: 15px;
+  font-size: 18px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, 50px);
+  grid-gap: 5px;
+  margin: 20px auto;
+  width: 275px; /* Grid size: 5 tiles + 4 gaps */
+  border: 2px solid #ccc;
 }
 
 .tile {
-    cursor: grab;
+  width: 50px;
+  height: 50px;
+  background-size: 100% 100%;
+  border: 1px solid rgba(128, 128, 128, 0.6); /* 60% grey */
+  cursor: pointer;
+  transition: transform 0.2s ease;
 }
 
-.dragging {
-    opacity: 0.7;
+.hidden {
+  display: none;
 }
 
-#winner {
-    display: none;
-    font-size: 24px;
-    font-weight: bold;
-    color: green;
-}
-
-#warning {
-    color: red;
-    font-weight: bold;
-    display: none;
+button {
+  margin: 20px auto;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
 }
