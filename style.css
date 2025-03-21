@@ -24,18 +24,22 @@ h1 {
 #container {
     display: flex;
     justify-content: center;
+    align-items: start;
     gap: 20px;
     margin-top: 20px;
+    flex-wrap: wrap;
 }
 
 #tile-grid, #grid {
     display: grid;
     grid-template-columns: repeat(5, 50px);
     grid-template-rows: repeat(5, 50px);
-    gap: 4px;
+    gap: 2px;
     background-color: white;
     padding: 10px;
     border: 2px solid #ccc;
+    min-width: 270px;
+    min-height: 270px;
 }
 
 .tile, .drop-zone {
@@ -50,6 +54,7 @@ h1 {
     cursor: grab;
     touch-action: none;
     background-color: white;
+    position: absolute;
 }
 
 .dragging {
