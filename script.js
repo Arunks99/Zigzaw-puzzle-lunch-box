@@ -160,23 +160,26 @@ document.addEventListener("DOMContentLoaded", function () {
         for (let col = 0; col < cols; col++) {
             let tile = document.createElement("div");
             tile.classList.add("tile");
-            tile.setAttribute("draggable", true); // Make tile draggable
+            tile.setAttribute("draggable", true); // Enable drag
             tile.dataset.correctPosition = `${row}-${col}`; // Store correct position
 
-            // Set background image
+            // Set background image correctly
             tile.style.backgroundImage = "url('https://i.postimg.cc/bvhnVRfP/S74-lunch-box.png')";
             tile.style.backgroundSize = `${imageSize}px ${imageSize}px`;
             tile.style.backgroundPosition = `-${col * tileSize}px -${row * tileSize}px`;
+            tile.style.backgroundRepeat = "no-repeat"; // Prevent repeat
+            tile.style.backgroundColor = "transparent"; // Ensure no white background
 
             tiles.push(tile);
         }
     }
-
     // Shuffle tiles randomly
     tiles.sort(() => Math.random() - 0.5);
 
     // Add shuffled tiles to the grid
+  tileGrid.innerHTML = ""; // Clear previous tiles
     tiles.forEach(tile => tileGrid.appendChild(tile));
+});
 
     // Enable drag-and-drop functionality
     addDragAndDrop(tiles);
