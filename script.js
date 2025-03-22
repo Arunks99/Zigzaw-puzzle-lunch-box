@@ -145,4 +145,30 @@ function snapToGrid(tile, dropZone) {
 function resetTilePosition(tile) {
     tileGrid.appendChild(tile);
     tile.style.position = "absolute";
-}
+  }
+
+document.addEventListener("DOMContentLoaded", function () {
+    const tileGrid = document.getElementById("tile-grid");
+    const rows = 5, cols = 5;
+    const imageSize = 250; // Full puzzle image size
+    const tileSize = 50;   // Each tile's size
+
+    // Clear existing tiles (in case of reloading)
+    tileGrid.innerHTML = '';
+
+    // Generate ordered tiles
+    for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+            let tile = document.createElement("div");
+            tile.classList.add("tile");
+
+            // Set correct background image cropping
+            tile.style.backgroundImage = "url('https://i.postimg.cc/bvhnVRfP/S74-lunch-box.png')";
+            tile.style.backgroundSize = `${imageSize}px ${imageSize}px`;
+            tile.style.backgroundPosition = `-${col * tileSize}px -${row * tileSize}px`;
+
+            // Add tile to the grid
+            tileGrid.appendChild(tile);
+        }
+    }
+});
