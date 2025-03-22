@@ -150,25 +150,35 @@ function resetTilePosition(tile) {
 document.addEventListener("DOMContentLoaded", function () {
     const tileGrid = document.getElementById("tile-grid");
     const rows = 5, cols = 5;
-    const imageSize = 250; // Full puzzle image size
-    const tileSize = 50;   // Each tile's size
-
-    // Clear existing tiles (in case of reloading)
-    tileGrid.innerHTML = '';
+    const imageSize = 250;
+    const tileSize = 50;
+    
+    let tiles = [];
 
     // Generate ordered tiles
     for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
             let tile = document.createElement("div");
             tile.classList.add("tile");
+            tile.setAttribute("draggable", true); // Make tile draggable
+            tile.dataset.correctPosition = `${row}-${col}`; // Store correct position
 
-            // Set correct background image cropping
+            // Set background image
             tile.style.backgroundImage = "url('https://i.postimg.cc/bvhnVRfP/S74-lunch-box.png')";
             tile.style.backgroundSize = `${imageSize}px ${imageSize}px`;
             tile.style.backgroundPosition = `-${col * tileSize}px -${row * tileSize}px`;
 
-            // Add tile to the grid
-            tileGrid.appendChild(tile);
+            tiles.push(tile);
         }
     }
+
+    // Shuffle tiles randomly
+    tiles.sort(() => Math.random() - 0.5);
+
+    // Add shuffled tiles to the grid
+    tiles.forEach(tile => tileGrid.appendChild(tile));
+
+    // Enable drag-and-drop functionality
+    addDragAndDrop(tiles);
 });
+
