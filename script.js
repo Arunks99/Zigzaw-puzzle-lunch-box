@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
     tileGrid.innerHTML = '';
     answerGrid.innerHTML = '';
 
-    // Generate tiles
+    // Generate tiles with correct images
     for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
             let tile = document.createElement("div");
@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
             tile.setAttribute("draggable", true);
             tile.dataset.correctPosition = `${row}-${col}`;
 
-            // Set tile background image
+            // Set tile background image properly
             tile.style.backgroundImage = "url('https://i.postimg.cc/bvhnVRfP/S74-lunch-box.png')";
             tile.style.backgroundSize = `${imageSize}px ${imageSize}px`;
             tile.style.backgroundPosition = `-${col * tileSize}px -${row * tileSize}px`;
@@ -28,11 +28,11 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Shuffle and add tiles to the question grid
+    // Shuffle tiles for random placement
     tiles.sort(() => Math.random() - 0.5);
     tiles.forEach(tile => tileGrid.appendChild(tile));
 
-    // Create empty answer grid slots
+    // Create empty answer grid slots with border
     for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
             let dropZone = document.createElement("div");
@@ -42,15 +42,10 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Enable drag-and-drop and touch support
-    addDragAndTouchSupport(tiles);
-});
-
-function addDragAndTouchSupport(tiles) {
+    // Drag and Drop Support (Mouse & Touch)
     let draggedTile = null;
-    let originalParent = null; // Store original position
+    let originalParent = null;
 
-    // Drag and Drop Support (Mouse)
     tiles.forEach(tile => {
         tile.addEventListener("dragstart", (e) => {
             draggedTile = tile;
@@ -67,10 +62,10 @@ function addDragAndTouchSupport(tiles) {
             draggedTile = null;
         });
 
-        // Touch Events (For Mobile)
+        // Touch Events (Mobile Support)
         tile.addEventListener("touchstart", (e) => {
             draggedTile = tile;
-            originalParent = tile.parentNode; // Save original parent
+            originalParent = tile.parentNode;
             tile.classList.add("dragging");
 
             let touch = e.touches[0];
@@ -102,7 +97,6 @@ function addDragAndTouchSupport(tiles) {
         zone.addEventListener("drop", (e) => {
             e.preventDefault();
             if (draggedTile && !zone.hasChildNodes()) {
-                // Check if placed correctly
                 if (draggedTile.dataset.correctPosition === zone.dataset.correctPosition) {
                     zone.appendChild(draggedTile);
                     draggedTile.style.position = "static"; // Reset position
@@ -124,7 +118,7 @@ function addDragAndTouchSupport(tiles) {
             }
         });
     });
-}
+});
 
 // Function to check tile placement on touch release
 function checkTilePlacement(tile, touch) {
