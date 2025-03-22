@@ -1,3 +1,4 @@
+/* General Styles */
 body {
     font-family: Arial, sans-serif;
     text-align: center;
@@ -21,6 +22,7 @@ h1 {
     font-weight: bold;
 }
 
+/* Container */
 #container {
     display: flex;
     justify-content: center;
@@ -30,6 +32,7 @@ h1 {
     flex-wrap: wrap;
 }
 
+/* Question Grid (Tile Grid) and Answer Grid */
 #tile-grid, #grid {
     display: grid;
     grid-template-columns: repeat(5, 50px);
@@ -40,23 +43,34 @@ h1 {
     border: 2px solid #ccc;
     min-width: 270px;
     min-height: 270px;
-    position: relative;
 }
+
+/* Individual Tiles */
 .tile {
     width: 50px;
     height: 50px;
     border: 2px solid rgba(128, 128, 128, 0.6);
     cursor: grab;
     touch-action: none;
-    background-size: 250px 250px;
-    background-repeat: no-repeat; /* Ensures image is not repeated */
-    background-color: transparent; /* Removes white tiles */
+    background-repeat: no-repeat;
+    background-color: transparent; /* Prevents white background */
+    position: relative;
 }
 
+/* Dragging Effect */
 .dragging {
     opacity: 0.7;
 }
 
+/* Answer Grid Drop Zones */
+.drop-zone {
+    width: 50px;
+    height: 50px;
+    border: 2px dashed #aaa;
+    background-color: transparent;
+}
+
+/* Winner Message */
 #winner {
     display: none;
     font-size: 20px;
