@@ -34,11 +34,13 @@ document.addEventListener("DOMContentLoaded", function () {
     tiles.forEach(tile => tileGrid.appendChild(tile));
 
     // Create empty answer grid slots
-    for (let i = 0; i < rows * cols; i++) {
-        let dropZone = document.createElement("div");
-        dropZone.classList.add("drop-zone");
-        dropZone.dataset.position = i;
-        answerGrid.appendChild(dropZone);
+    for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+            let dropZone = document.createElement("div");
+            dropZone.classList.add("drop-zone");
+            dropZone.dataset.correctPosition = `${row}-${col}`;
+            answerGrid.appendChild(dropZone);
+        }
     }
 
     // Enable drag-and-drop and touch support
@@ -61,7 +63,7 @@ function addDragAndTouchSupport(tiles) {
         tile.addEventListener("dragend", () => {
             draggedTile.classList.remove("dragging");
             if (draggedTile && !draggedTile.parentElement.classList.contains("drop-zone")) {
-                originalParent.appendChild(draggedTile); // Snap back
+                originalParent.appendChild(draggedTile); // Snap back if incorrect
             }
             draggedTile = null;
         });
@@ -74,77 +76,4 @@ function addDragAndTouchSupport(tiles) {
 
             let touch = e.touches[0];
             tile.dataset.offsetX = touch.clientX - tile.getBoundingClientRect().left;
-            tile.dataset.offsetY = touch.clientY - tile.getBoundingClientRect().top;
-        });
-
-        tile.addEventListener("touchmove", (e) => {
-            e.preventDefault();
-            if (!draggedTile) return;
-
-            let touch = e.touches[0];
-            draggedTile.style.position = "absolute";
-            draggedTile.style.left = touch.clientX - draggedTile.dataset.offsetX + "px";
-            draggedTile.style.top = touch.clientY - draggedTile.dataset.offsetY + "px";
-        });
-
-        tile.addEventListener("touchend", (e) => {
-            draggedTile.classList.remove("dragging");
-            checkTilePlacement(draggedTile, e.changedTouches[0]);
-            if (draggedTile && !draggedTile.parentElement.classList.contains("drop-zone")) {
-                originalParent.appendChild(draggedTile); // Snap back
-            }
-            draggedTile.style.position = "static";
-            draggedTile = null;
-        });
-    });
-
-    // Handle dropping on answer grid
-    document.querySelectorAll(".drop-zone").forEach(zone => {
-        zone.addEventListener("dragover", (e) => e.preventDefault());
-
-        zone.addEventListener("drop", (e) => {
-            e.preventDefault();
-            if (draggedTile && !zone.hasChildNodes()) {
-                zone.appendChild(draggedTile);
-                draggedTile.style.position = "static"; // Reset position
-            } else {
-                originalParent.appendChild(draggedTile); // Snap back if not valid
-            }
-        });
-
-        // Touch-based drop
-        zone.addEventListener("touchend", function (e) {
-            if (draggedTile && !this.hasChildNodes()) {
-                this.appendChild(draggedTile);
-                draggedTile.style.position = "static";
-            } else {
-                originalParent.appendChild(draggedTile); // Snap back
-            }
-        });
-    });
-}
-
-// Function to check tile placement on touch release
-function checkTilePlacement(tile, touch) {
-    let dropZones = document.querySelectorAll(".drop-zone");
-    let found = false;
-
-    dropZones.forEach(zone => {
-        let rect = zone.getBoundingClientRect();
-        if (
-            touch.clientX >= rect.left &&
-            touch.clientX <= rect.right &&
-            touch.clientY >= rect.top &&
-            touch.clientY <= rect.bottom &&
-            !zone.hasChildNodes()
-        ) {
-            zone.appendChild(tile);
-            tile.style.position = "static";
-            found = true;
-        }
-    });
-
-    if (!found && tile.parentNode !== document.getElementById("tile-grid")) {
-        document.getElementById("tile-grid").appendChild(tile);
-    }
-}
+            tile.dataset.offsetY = touch.clientY - tile.getBoundingClientRect().top
