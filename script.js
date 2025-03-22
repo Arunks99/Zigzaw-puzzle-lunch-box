@@ -23,13 +23,12 @@ document.addEventListener("DOMContentLoaded", function () {
             tile.style.backgroundSize = `${imageSize}px ${imageSize}px`;
             tile.style.backgroundPosition = `-${col * tileSize}px -${row * tileSize}px`;
             tile.style.backgroundRepeat = "no-repeat";
-            tile.style.backgroundColor = "transparent";
 
             tiles.push(tile);
         }
     }
 
-    // Shuffle and add tiles to question grid
+    // Shuffle and add tiles to the question grid
     tiles.sort(() => Math.random() - 0.5);
     tiles.forEach(tile => tileGrid.appendChild(tile));
 
@@ -76,4 +75,80 @@ function addDragAndTouchSupport(tiles) {
 
             let touch = e.touches[0];
             tile.dataset.offsetX = touch.clientX - tile.getBoundingClientRect().left;
-            tile.dataset.offsetY = touch.clientY - tile.getBoundingClientRect().top
+            tile.dataset.offsetY = touch.clientY - tile.getBoundingClientRect().top;
+        });
+
+        tile.addEventListener("touchmove", (e) => {
+            e.preventDefault();
+            if (!draggedTile) return;
+
+            let touch = e.touches[0];
+            draggedTile.style.position = "absolute";
+            draggedTile.style.left = touch.clientX - draggedTile.dataset.offsetX + "px";
+            draggedTile.style.top = touch.clientY - draggedTile.dataset.offsetY + "px";
+        });
+
+        tile.addEventListener("touchend", (e) => {
+            draggedTile.classList.remove("dragging");
+            checkTilePlacement(draggedTile, e.changedTouches[0]);
+            draggedTile = null;
+        });
+    });
+
+    // Handle dropping on answer grid
+    document.querySelectorAll(".drop-zone").forEach(zone => {
+        zone.addEventListener("dragover", (e) => e.preventDefault());
+
+        zone.addEventListener("drop", (e) => {
+            e.preventDefault();
+            if (draggedTile && !zone.hasChildNodes()) {
+                // Check if placed correctly
+                if (draggedTile.dataset.correctPosition === zone.dataset.correctPosition) {
+                    zone.appendChild(draggedTile);
+                    draggedTile.style.position = "static"; // Reset position
+                } else {
+                    originalParent.appendChild(draggedTile); // Snap back if incorrect
+                }
+            }
+        });
+
+        // Touch-based drop
+        zone.addEventListener("touchend", function (e) {
+            if (draggedTile && !this.hasChildNodes()) {
+                if (draggedTile.dataset.correctPosition === this.dataset.correctPosition) {
+                    this.appendChild(draggedTile);
+                    draggedTile.style.position = "static";
+                } else {
+                    originalParent.appendChild(draggedTile); // Snap back if incorrect
+                }
+            }
+        });
+    });
+}
+
+// Function to check tile placement on touch release
+function checkTilePlacement(tile, touch) {
+    let dropZones = document.querySelectorAll(".drop-zone");
+    let found = false;
+
+    dropZones.forEach(zone => {
+        let rect = zone.getBoundingClientRect();
+        if (
+            touch.clientX >= rect.left &&
+            touch.clientX <= rect.right &&
+            touch.clientY >= rect.top &&
+            touch.clientY <= rect.bottom &&
+            !zone.hasChildNodes()
+        ) {
+            if (tile.dataset.correctPosition === zone.dataset.correctPosition) {
+                zone.appendChild(tile);
+                tile.style.position = "static";
+                found = true;
+            }
+        }
+    });
+
+    if (!found && tile.parentNode !== document.getElementById("tile-grid")) {
+        document.getElementById("tile-grid").appendChild(tile);
+    }
+}
