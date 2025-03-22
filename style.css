@@ -40,6 +40,7 @@ h1 {
     border: 2px solid #ccc;
     min-width: 270px;
     min-height: 270px;
+    position: relative;
 }
 
 .tile, .drop-zone {
@@ -48,13 +49,14 @@ h1 {
     border: 2px solid rgba(128, 128, 128, 0.6);
     background-image: url('https://i.postimg.cc/bvhnVRfP/S74-lunch-box.png');
     background-size: 250px 250px;
+    background-color: white;
 }
 
 .tile {
     cursor: grab;
     touch-action: none;
     background-color: white;
-    position: absolute;
+    position: relative;
 }
 
 .dragging {
