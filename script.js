@@ -40,30 +40,43 @@ document.addEventListener("DOMContentLoaded", function () {
         answerGrid.appendChild(dropZone);
     }
 
-    // Enable drag-and-drop functionality
-    addDragAndDrop(tiles);
+    // Enable drag-and-drop and touch support
+    addDragAndTouchSupport(tiles);
 });
 
-function addDragAndDrop(tiles) {
+function addDragAndTouchSupport(tiles) {
+    let draggedTile = null;
+
     tiles.forEach(tile => {
-        // Drag Events
+        // Drag Events (For Mouse)
         tile.addEventListener("dragstart", (e) => {
+            draggedTile = tile;
             e.dataTransfer.setData("text", tile.dataset.correctPosition);
             tile.classList.add("dragging");
         });
 
         tile.addEventListener("dragend", () => {
+            draggedTile = null;
             tile.classList.remove("dragging");
         });
 
         // Touch Events (For Mobile)
         tile.addEventListener("touchstart", (e) => {
-            e.preventDefault();
+            draggedTile = tile;
             tile.classList.add("dragging");
         });
 
+        tile.addEventListener("touchmove", (e) => {
+            e.preventDefault();
+            let touch = e.touches[0];
+            draggedTile.style.position = "absolute";
+            draggedTile.style.left = touch.clientX - 25 + "px";
+            draggedTile.style.top = touch.clientY - 25 + "px";
+        });
+
         tile.addEventListener("touchend", () => {
-            tile.classList.remove("dragging");
+            draggedTile.classList.remove("dragging");
+            draggedTile = null;
         });
     });
 
@@ -75,10 +88,19 @@ function addDragAndDrop(tiles) {
 
     grid.addEventListener("drop", (e) => {
         e.preventDefault();
-        let position = e.dataTransfer.getData("text");
-        let droppedTile = document.querySelector(`.tile[data-correct-position='${position}']`);
-        if (droppedTile) {
-            grid.appendChild(droppedTile);
+        if (draggedTile) {
+            grid.appendChild(draggedTile);
+            draggedTile.style.position = "static"; // Reset position
         }
+    });
+
+    // Touch Drop Handling
+    document.querySelectorAll(".drop-zone").forEach(zone => {
+        zone.addEventListener("touchend", function () {
+            if (draggedTile) {
+                this.appendChild(draggedTile);
+                draggedTile.style.position = "static"; // Reset position
+            }
+        });
     });
 }
