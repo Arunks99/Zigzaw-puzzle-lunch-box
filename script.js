@@ -69,8 +69,8 @@ document.addEventListener("DOMContentLoaded", function () {
             tile.classList.add("dragging");
 
             let touch = e.touches[0];
-            tile.dataset.offsetX = touch.clientX - tile.getBoundingClientRect().left;
-            tile.dataset.offsetY = touch.clientY - tile.getBoundingClientRect().top;
+            tile.dataset.offsetX = 0;
+            tile.dataset.offsetY = 0;
         });
 
         tile.addEventListener("touchmove", (e) => {
@@ -79,8 +79,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
             let touch = e.touches[0];
             draggedTile.style.position = "absolute";
-            draggedTile.style.left = touch.clientX - draggedTile.dataset.offsetX + "px";
-            draggedTile.style.top = touch.clientY - draggedTile.dataset.offsetY + "px";
+            draggedTile.style.left = touch.clientX + "px";
+            draggedTile.style.top = touch.clientY + "px";
         });
 
         tile.addEventListener("touchend", (e) => {
