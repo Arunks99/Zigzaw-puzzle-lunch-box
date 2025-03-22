@@ -22,7 +22,7 @@ h1 {
     font-weight: bold;
 }
 
-/* Container */
+/* Main Container */
 #container {
     display: flex;
     justify-content: center;
@@ -32,7 +32,7 @@ h1 {
     flex-wrap: wrap;
 }
 
-/* Question Grid (Tile Grid) and Answer Grid */
+/* Question Grid (Tile Grid) & Answer Grid */
 #tile-grid, #grid {
     display: grid;
     grid-template-columns: repeat(5, 50px);
@@ -45,13 +45,13 @@ h1 {
     min-height: 270px;
 }
 
-/* Individual Tiles */
+/* Tiles in Question Grid */
 .tile {
     width: 50px;
     height: 50px;
     border: 2px solid rgba(128, 128, 128, 0.6);
     cursor: grab;
-    touch-action: none;
+    touch-action: none; /* Ensures touch dragging works */
     background-repeat: no-repeat;
     background-color: transparent; /* Prevents white background */
     position: relative;
