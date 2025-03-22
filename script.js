@@ -182,3 +182,40 @@ document.addEventListener("DOMContentLoaded", function () {
     addDragAndDrop(tiles);
 });
 
+function addDragAndDrop(tiles) {
+    tiles.forEach(tile => {
+        tile.addEventListener("dragstart", (e) => {
+            e.dataTransfer.setData("text", tile.dataset.correctPosition);
+            tile.classList.add("dragging");
+        });
+
+        tile.addEventListener("dragend", () => {
+            tile.classList.remove("dragging");
+        });
+
+        // Enable touch support
+        tile.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            tile.classList.add("dragging");
+        });
+
+        tile.addEventListener("touchend", () => {
+            tile.classList.remove("dragging");
+        });
+    });
+
+    const grid = document.getElementById("grid");
+    
+    grid.addEventListener("dragover", (e) => {
+        e.preventDefault();
+    });
+
+    grid.addEventListener("drop", (e) => {
+        e.preventDefault();
+        let position = e.dataTransfer.getData("text");
+        let droppedTile = document.querySelector(`.tile[data-correct-position='${position}']`);
+        if (droppedTile) {
+            grid.appendChild(droppedTile);
+        }
+    });
+}
