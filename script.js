@@ -94,7 +94,9 @@ function addDragAndDropHandlers(tile) {
             ) {
                 if (draggedTile.dataset.correctPosition === zone.dataset.correctPosition) {
                     zone.appendChild(draggedTile);
-                    draggedTile.style.position = "static";
+                    draggedTile.style.position = "relative";
+                    draggedTile.style.left = "0";
+                    draggedTile.style.top = "0";
                     placedCorrectly = true;
                 }
             }
@@ -103,7 +105,9 @@ function addDragAndDropHandlers(tile) {
         // Snap back to question grid if placed incorrectly
         if (!placedCorrectly) {
             originalParent.appendChild(draggedTile);
-            draggedTile.style.position = "static"; 
+            draggedTile.style.position = "relative"; 
+            draggedTile.style.left = "0";
+            draggedTile.style.top = "0";
         }
 
         draggedTile.classList.remove("dragging");
