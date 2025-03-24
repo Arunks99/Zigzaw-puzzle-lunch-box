@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const answerGrid = document.getElementById("grid");
     
     const imageUrl = "https://i.postimg.cc/bvhnVRfP/S74-lunch-box.png"; // Puzzle image
-    let tiles = [];
+  
     
 // Create 25 tiles and store them in an array
     for (let i = 0; i < 25; i++) {
