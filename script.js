@@ -1,41 +1,29 @@
-let draggedTile = null;
-let originalParent = null;
-
 document.addEventListener("DOMContentLoaded", () => {
     const tileGrid = document.getElementById("tile-grid");
     const answerGrid = document.getElementById("grid");
-    
+
     const imageUrl = "https://i.postimg.cc/bvhnVRfP/S74-lunch-box.png"; // Puzzle image
-  
-    
-// Create 25 tiles and store them in an array
+    let tiles = [];
+
+    // Create 25 tiles with correct image portions
     for (let i = 0; i < 25; i++) {
         let tile = document.createElement("div");
         tile.classList.add("tile");
         tile.dataset.correctPosition = i; // Assign correct position
-    
-   // Calculate row and column position
-        let row = Math.floor(i / 5);
-        let col = i % 5;  
-   
-   // Set background image position for each tile
+
+        // Calculate row and column position
         let row = Math.floor(i / 5);
         let col = i % 5;
-        tile.style.backgroundPosition = `-${col * 50}px -${row * 50}px`;
 
-// Apply correct portion of the image
+        // Apply correct portion of the image
         tile.style.backgroundImage = `url('${imageUrl}')`;
         tile.style.backgroundPosition = `-${col * 50}px -${row * 50}px`;
-        tile.style.backgroundSize = "250px 250px";
+        tile.style.backgroundSize = "250px 250px"; // Ensure the full image scales correctly
 
         tiles.push(tile);
     }
-        
-        tileGrid.appendChild(tile);
-        addDragAndDropHandlers(tile);
-    }
 
-// Shuffle tiles array using Fisher-Yates shuffle
+    // Shuffle tiles using Fisher-Yates algorithm
     for (let i = tiles.length - 1; i > 0; i--) {
         let j = Math.floor(Math.random() * (i + 1));
         [tiles[i], tiles[j]] = [tiles[j], tiles[i]];
@@ -54,10 +42,13 @@ document.addEventListener("DOMContentLoaded", () => {
         dropZone.dataset.correctPosition = i;
         answerGrid.appendChild(dropZone);
     }
-});   
+});
 
-// Function to add drag & drop support for both touch and mouse
+// Drag-and-drop & touch support
 function addDragAndDropHandlers(tile) {
+    let draggedTile = null;
+    let originalParent = null;
+
     tile.addEventListener("touchstart", (e) => {
         let touch = e.touches[0];
         let rect = tile.getBoundingClientRect();
@@ -79,7 +70,7 @@ function addDragAndDropHandlers(tile) {
         let offsetX = parseFloat(draggedTile.dataset.offsetX);
         let offsetY = parseFloat(draggedTile.dataset.offsetY);
 
-        // Ensure tile moves exactly with the finger
+        // Move tile with the finger
         draggedTile.style.position = "absolute";
         draggedTile.style.left = `${touch.clientX - offsetX}px`;
         draggedTile.style.top = `${touch.clientY - offsetY}px`;
@@ -102,21 +93,21 @@ function addDragAndDropHandlers(tile) {
                 !zone.hasChildNodes()
             ) {
                 if (draggedTile.dataset.correctPosition === zone.dataset.correctPosition) {
-                    zone.appendChild(draggedTile); // Place in correct position
+                    zone.appendChild(draggedTile);
                     draggedTile.style.position = "static";
                     placedCorrectly = true;
                 }
             }
         });
 
-        // 🔥 If tile was NOT placed correctly, SNAP BACK to question grid
+        // Snap back to question grid if placed incorrectly
         if (!placedCorrectly) {
             originalParent.appendChild(draggedTile);
-            draggedTile.style.position = "static"; // Reset position
+            draggedTile.style.position = "static"; 
         }
 
         draggedTile.classList.remove("dragging");
-        draggedTile.style.zIndex = "1"; // Reset stacking order
+        draggedTile.style.zIndex = "1"; 
         draggedTile = null;
     });
 }
