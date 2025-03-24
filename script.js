@@ -58,11 +58,13 @@ function addDragAndDropHandlers(tile) {
         originalParent = tile.parentNode;
         tile.classList.add("dragging");
 
-        // Store offset between touch point and tile position
-        draggedTile.dataset.offsetX = touch.clientX - rect.left;
-        draggedTile.dataset.offsetY = touch.clientY - rect.top;
-    });
-
+       // Move tile immediately under the finger
+    draggedTile.style.position = "absolute";
+    draggedTile.style.left = `${touch.clientX - 25}px`; // Center the tile under the finger
+    draggedTile.style.top = `${touch.clientY - 25}px`; 
+    draggedTile.style.zIndex = "1000"; // Ensure tile is above others
+});
+    
     tile.addEventListener("touchmove", (e) => {
         e.preventDefault(); // Prevents page scrolling
         if (!draggedTile) return;
