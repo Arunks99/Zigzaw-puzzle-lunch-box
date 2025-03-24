@@ -52,32 +52,27 @@ function addDragAndDropHandlers(tile) {
 
     tile.addEventListener("touchstart", (e) => {
         let touch = e.touches[0];
-        let rect = tile.getBoundingClientRect();
 
         draggedTile = tile;
         originalParent = tile.parentNode;
         tile.classList.add("dragging");
 
-       // Move tile immediately under the finger
-    draggedTile.style.position = "absolute";
-    draggedTile.style.left = `${touch.clientX }px`; // Center the tile under the finger
-    draggedTile.style.top = `${touch.clientY }px`; 
-    draggedTile.style.zIndex = "1000"; // Ensure tile is above others
-});
-    
+        // Ensure tile follows the finger immediately
+        draggedTile.style.position = "absolute";
+        draggedTile.style.left = `${touch.clientX - 25}px`; // Center the tile under the finger
+        draggedTile.style.top = `${touch.clientY - 25}px`;
+        draggedTile.style.zIndex = "1000";
+    });
+
     tile.addEventListener("touchmove", (e) => {
-        e.preventDefault(); // Prevents page scrolling
+        e.preventDefault(); // Prevent page scrolling
         if (!draggedTile) return;
 
         let touch = e.touches[0];
-        let offsetX = parseFloat(draggedTile.dataset.offsetX);
-        let offsetY = parseFloat(draggedTile.dataset.offsetY);
 
-        // Move tile with the finger
-        draggedTile.style.position = "absolute";
-        draggedTile.style.left = `${touch.clientX - offsetX}px`;
-        draggedTile.style.top = `${touch.clientY - offsetY}px`;
-        draggedTile.style.zIndex = "1000"; // Ensure tile is above others
+        // Move tile with the finger continuously
+        draggedTile.style.left = `${touch.clientX - 25}px`;
+        draggedTile.style.top = `${touch.clientY - 25}px`;
     });
 
     tile.addEventListener("touchend", (e) => {
