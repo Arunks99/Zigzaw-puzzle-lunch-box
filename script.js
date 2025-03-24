@@ -6,14 +6,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const answerGrid = document.getElementById("grid");
     
     const imageUrl = "https://i.postimg.cc/bvhnVRfP/S74-lunch-box.png"; // Puzzle image
+    let tiles = [];
     
-    // Create tiles and add to the question grid
+// Create 25 tiles and store them in an array
     for (let i = 0; i < 25; i++) {
         let tile = document.createElement("div");
         tile.classList.add("tile");
         tile.dataset.correctPosition = i; // Assign correct position
-
-    // Set background image position for each tile
+    
+   // Calculate row and column position
+        let row = Math.floor(i / 5);
+        let col = i % 5;  
+   
+   // Set background image position for each tile
         let row = Math.floor(i / 5);
         let col = i % 5;
         tile.style.backgroundPosition = `-${col * 50}px -${row * 50}px`;
@@ -21,21 +26,36 @@ document.addEventListener("DOMContentLoaded", () => {
 // Apply correct portion of the image
         tile.style.backgroundImage = `url('${imageUrl}')`;
         tile.style.backgroundPosition = `-${col * 50}px -${row * 50}px`;
-        tile.style.backgroundSize = "250px 250px"; // Ensure the full image scales correctly
+        tile.style.backgroundSize = "250px 250px";
+
+        tiles.push(tile);
+    }
         
         tileGrid.appendChild(tile);
         addDragAndDropHandlers(tile);
     }
 
-   
-// Create empty drop zones in the answer grid
+// Shuffle tiles array using Fisher-Yates shuffle
+    for (let i = tiles.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        [tiles[i], tiles[j]] = [tiles[j], tiles[i]];
+    }
+
+    // Append shuffled tiles to the question grid
+    tiles.forEach(tile => {
+        tileGrid.appendChild(tile);
+        addDragAndDropHandlers(tile);
+    });
+
+    // Create empty drop zones in the answer grid
     for (let i = 0; i < 25; i++) {
         let dropZone = document.createElement("div");
         dropZone.classList.add("drop-zone");
         dropZone.dataset.correctPosition = i;
         answerGrid.appendChild(dropZone);
     }
-});
+});   
+
 // Function to add drag & drop support for both touch and mouse
 function addDragAndDropHandlers(tile) {
     tile.addEventListener("touchstart", (e) => {
