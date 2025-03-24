@@ -48,6 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function addDragAndDropHandlers(tile) {
     let draggedTile = null;
     let originalParent = null;
+    const ERROR_MARGIN = 20; // Increased error margin (px)
 
     tile.addEventListener("touchstart", (e) => {
         let touch = e.touches[0];
@@ -86,10 +87,10 @@ function addDragAndDropHandlers(tile) {
             let rect = zone.getBoundingClientRect();
 
             if (
-                touch.clientX >= rect.left &&
-                touch.clientX <= rect.right &&
-                touch.clientY >= rect.top &&
-                touch.clientY <= rect.bottom &&
+                touch.clientX >= rect.left - ERROR_MARGIN &&
+                touch.clientX <= rect.right + ERROR_MARGIN &&
+                touch.clientY >= rect.top - ERROR_MARGIN &&
+                touch.clientY <= rect.bottom + ERROR_MARGIN &&
                 !zone.hasChildNodes()
             ) {
                 if (draggedTile.dataset.correctPosition === zone.dataset.correctPosition) {
