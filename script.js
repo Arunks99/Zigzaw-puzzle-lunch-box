@@ -60,8 +60,8 @@ function addDragAndDropHandlers(tile) {
 
        // Move tile immediately under the finger
     draggedTile.style.position = "absolute";
-    draggedTile.style.left = `${touch.clientX - 25}px`; // Center the tile under the finger
-    draggedTile.style.top = `${touch.clientY - 25}px`; 
+    draggedTile.style.left = `${touch.clientX }px`; // Center the tile under the finger
+    draggedTile.style.top = `${touch.clientY }px`; 
     draggedTile.style.zIndex = "1000"; // Ensure tile is above others
 });
     
